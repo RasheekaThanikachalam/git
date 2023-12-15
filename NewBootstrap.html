@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <script>
+
+        let questions = [
+            {
+                "question": "1. Where is Archimedis Located?",
+                "option1": "Hyderabad",
+                "option2": "Secunderbad",
+                "option3": "Ahmedabad",
+                "option4": "Guindy",
+                "correctOption": "option4",
+                "userOption": null
+            },
+            {
+                "question": "2. How many branches?",
+                "option1": "0",               
+                "option2": "-1",
+                "option3": "2",
+                "option4": "7",
+                "correctOption": "option3",
+                "userOption": null
+            },
+            {
+                "question": "3. How many employees?",
+                "option1": "70",
+                "option2": "700",
+                "option3": "7000",
+                "option4": "7",
+                "correctOption": "option1",
+                "userOption": null
+            },
+            {
+                "question": "4. A body at rest can have?",
+                "option1": "Speed",
+                "option2": "Velocity",
+                "option3": "Momentum",
+                "option4": "Energy",
+                "correctOption": "option2",
+                "userOption": null
+            },
+            {
+                "question": "5. The atmospheric pressure at sea level is ........ atm ?",
+                "option1": "0.001",
+                "option2": "1",
+                "option3": "0",
+                "option4": "0.1",
+                "correctOption": "option2",
+                "userOption": null
+            },
+            {
+                "question": "6. Choose the one which best expresses the meaning of the word:",
+                "option1": "Indifferent",
+                "option2": "Defy",
+                "option3": "Differ",
+                "option4": "Postpone",
+                "correctOption": "option3",
+                "userOption": null
+            },
+            {
+                "question": "7. They are talking _______ a confidential matter, so do not interrupt.",
+                "option1": "in",
+                "option2": "on",
+                "option3": "for",
+                "option4": "over",
+                "correctOption": "option4",
+                "userOption": null
+            },
+            {
+                "question": "8. What they are doing does not seem ________ working.",
+                "option1": "be",
+                "option2": "being",
+                "option3": "Mobeenmentum",
+                "option4": "Energy",
+                "correctOption": "option2",
+                "userOption": null
+            },
+            {
+                "question": "9. She is going to quit her job ________ they give her a pay rise.",
+                "option1": "or",
+                "option2": "until",
+                "option3": "unless",
+                "option4": "providing",
+                "correctOption": "option3",
+                "userOption": null
+            },
+            {
+                "question": "10.It’s the first time I _______ sea-food in my life.",
+                "option1": "eat",
+                "option2": "eaten",
+                "option3": "have eaten",
+                "option4": "had eaten",
+                "correctOption": "option3",
+                "userOption": null
+            }
+        ]
+        let currentQuestion = 0;
+        function displayQuestions() {
+            document.getElementById('status').innerHTML = (currentQuestion + 1) + ' of ' + questions.length;
+            document.getElementById('question').innerHTML = questions[currentQuestion].question;
+            document.getElementById('option1').innerHTML = questions[currentQuestion].option1;
+            document.getElementById('option2').innerHTML = questions[currentQuestion].option2;
+            document.getElementById('option3').innerHTML = questions[currentQuestion].option3;
+            document.getElementById('option4').innerHTML = questions[currentQuestion].option4;
+            if (questions[currentQuestion].userOption == null) {
+                clearOptions()
+            } else {
+                console.log(questions[currentQuestion].userOption + 'r');
+                document.getElementById(questions[currentQuestion].userOption + 'r').checked = true
+            }
+        }
+        function clearOptions() {
+            questions[currentQuestion].userOption = null;
+            document.getElementById('option1r').checked = false;
+            document.getElementById('option2r').checked = false;
+            document.getElementById('option3r').checked = false;
+            document.getElementById('option4r').checked = false;
+        }
+        function previousQuestion() {
+            if (document.querySelector('input[name="answer"]:checked') != null) {
+                questions[currentQuestion].userOption = document.querySelector('input[name="answer"]:checked').value
+            }
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                displayQuestions();
+            }
+        }
+        function nextQuestion() {
+            if (document.querySelector('input[name="answer"]:checked') != null) {
+                questions[currentQuestion].userOption = document.querySelector('input[name="answer"]:checked').value
+            }
+            if (currentQuestion != questions.length - 1) {
+                currentQuestion++;
+                displayQuestions();
+            }
+        }
+        let correct = 0;
+        let wrong = 0;
+        let attempted = 0;
+        function submitQuiz() {
+            if (document.querySelector('input[name="answer"]:checked')) {
+                questions[currentQuestion].userOption = document.querySelector('input[name="answer"]:checked').value
+            }
+            console.log(questions)
+            for (let i = 0; i < questions.length; i++) {
+                if (questions[i].userOption != null) {
+                    attempted++;
+                    // location.href = 'Table.html'                   
+                }
+            }
+            if (attempted < questions.length) {
+                alert('Quiz not yet completed, there are ' + (questions.length - attempted) + ' remaining to attempt')
+            }
+            // For getting right or wrong answers
+            for (let i = 0; i < questions.length; i++) {
+                if (questions[i].userOption != questions[i].correctOption) {
+                    wrong++
+                } else {
+                    correct++;
+                }
+            }
+
+            document.getElementById('quiz1').innerHTML = 'Wrong -> ' + wrong + "<br>Right -> " + correct + '<br>You have achieved ' + correct * 100 / (correct + wrong) + "% <br>";
+
+            const ctx = document.getElementById('myChart');
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Right', 'Wrong'],
+                    datasets: [{
+                        label: "Right Vs Wrong",
+                        data: [correct, wrong],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            document.getElementById('quizResult').innerHTML = `Hi Rasheeka, You have attempted this quiz for ${localStorage.getItem('quizAttempts')} number of times. Upon time, you are improving.`;
+
+            wrong = 0;
+            correct = 0;
+            attempted = 0;
+
+            document.getElementById('randID').innerHTML = `
+             <table class="table table-bordered table-striped">
+        <thead >
+            <tr >
+                <th scope="col" >Sr.No.</th >
+                <th scope="col" >Name</th >
+                <th scope="col" >Percentage</th >
+                </tr >
+        </thead >
+        <tbody >
+            <tr >
+                <th scope="col" >1</th >
+                <td scope="col" >Rasheeka</td >
+                <td scope="col" >40</td >
+            </tr >
+            <tr >
+                <th scope="col" >2</th >
+                <td scope="col" >Secn</td >
+                <td scope="col" >80</td >
+            </tr >
+            <tr >
+                <th scope="row" >3</th >
+                <td scope="col" >Ram</td >
+                <td scope="col" >60</td >
+            </tr >
+        </tbody >
+        </table >
+                    `
+        }
+        // displayQuestions()
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body onload=displayQuestions()>
+
+    <h1 class="text-center font-weight-bolder"> Archimedis Digital</h1>
+    <div id="status"></div>
+    <div id="hole"
+        class="p-3 mb-2 bg-secondary-subtle text-emphasis-secondary border border-black mx-auto bg-warning w-75 p-3 h-75 d-inline-block ">
+        <div id="quiz1">
+            <h2 id="question">Sample Text</h2>
+            <input id="option1r" type="radio" name="answer" value="option1" /><label id='option1'>Sample
+                Text</label><br>
+            <input id="option2r" type="radio" name="answer" value="option2" /><label id='option2'>Sample
+                Text</label><br>
+            <input id="option3r" type="radio" name="answer" value="option3" /><label id='option3'>Sample
+                Text</label><br>
+            <input id="option4r" type="radio" name="answer" value="option4" /><label id='option4'>Sample
+                Text</label><br>
+            <div id="buttons">
+                <button class="btn btn-primary" onclick="previousQuestion()">previous</button>
+                <button class="btn btn-success" onclick="nextQuestion()">Next</button>
+                <button class="btn btn-danger" onclick="clearOptions()">Remove my selection</button>
+                <button class="btn btn-warning" onclick="submitQuiz()">Submit</button>
+            </div>
+        </div>
+        <canvas id='myChart' width="800px" height="200px"></canvas>
+        <div id="quizResult"></div>
+        <div id="randID"></div>
+        <!-- <iframe width="790" height="444" src="https://www.youtube.com/embed/8-E1LbChJ88" title="LONG DRIVE Bollywood Mix - Arijit Singh | Full Album | 2 Hour Nonstop | Apna Bana Le, Zaalima &amp; More" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> -->
+    </div>
+       
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

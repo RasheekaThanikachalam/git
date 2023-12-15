@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+ 
+<script>
+    let users = [
+        {
+            "username": "rasheeka",
+            "password": "1234",
+            "fullname": "Rasheeka Thanikachalam"
+        },
+        {
+            "username": "maria",
+            "password": "5678",
+            "fullname": "Maria Sarah Roseline"
+        }
+    ]
+ 
+    function validateLogin() {
+        let availableUsers = []
+        for (let i = 0; i < users.length; i++) {
+            availableUsers.push(users[i].username)
+        }
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+        if (availableUsers.includes(username)) {
+            for (let i = 0; i < users.length; i++) {
+                if (username == users[i].username) {
+                    if (password == users[i].password) {
+                        location.href = 'NewBootstrap.html'
+                        localStorage.setItem("userObject", users[i].fullname);
+                    } else {
+                        alert('Wrong password' + users[i].fullname)
+                    }
+                }
+            }
+        } else {
+            alert('Username' + username + " not found")
+        }
+ 
+    }
+</script>
+ 
+<body>
+    <h1> Archimedis Digital</h1>
+ 
+    <form id="loginForm">
+        <h2>Login</h2>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <br><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br><br>
+        <button type="button" onclick="validateLogin()">Login</button>
+    </form>
+
+   
+</body>
+ 
+</html>
